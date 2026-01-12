@@ -1,0 +1,140 @@
+/* H5移动端重置样式 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent; /* 移除移动端点击高亮效果 */
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.h5-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 750px; /* 设计稿宽度 */
+  margin: 0 auto;
+  background-color: white;
+  position: relative;
+}
+
+.h5-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-align: center;
+  padding: 20px 15px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.h5-header h1 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+.h5-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 15px;
+  background-color: #f9f9f9;
+}
+
+.h5-content {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.h5-content h2 {
+  font-size: 1.3rem;
+  color: #333;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.h5-content p {
+  font-size: 0.9rem;
+  color: #666;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.feature-item {
+  text-align: center;
+  padding: 15px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background: #fafafa;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feature-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.feature-item h3 {
+  font-size: 1.1rem;
+  color: #444;
+  margin-bottom: 8px;
+}
+
+.feature-item p {
+  font-size: 0.85rem;
+  color: #777;
+  margin: 0;
+}
+
+.h5-footer {
+  background: #333;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  font-size: 0.8rem;
+  margin-top: auto;
+}
+
+/* 移动端响应式设计 */
+@media screen and (max-width: 750px) {
+  .h5-container {
+    max-width: 100%;
+  }
+  
+  .h5-header h1 {
+    font-size: 1.2rem;
+  }
+  
+  .h5-content h2 {
+    font-size: 1.1rem;
+  }
+}
+
+/* 针对不同设备的优化 */
+@media screen and (max-width: 375px) {
+  .h5-content {
+    padding: 15px 10px;
+  }
+  
+  .feature-item {
+    padding: 12px 10px;
+  }
+}
