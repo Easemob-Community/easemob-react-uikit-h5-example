@@ -87,6 +87,12 @@ body {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.feature-item.link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
 .feature-item:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -102,6 +108,113 @@ body {
   font-size: 0.85rem;
   color: #777;
   margin: 0;
+}
+
+.demo-placeholder {
+  margin-top: 20px;
+  padding: 20px;
+  background: #f0f8ff;
+  border-radius: 8px;
+  text-align: center;
+  color: #555;
+  border: 1px dashed #ccc;
+}
+
+/* 弹窗样式 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  width: 85%;
+  max-width: 400px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
+  color: #333;
+  text-align: center;
+}
+
+.modal-description {
+  margin: 0 0 20px 0;
+  font-size: 0.9rem;
+  color: #666;
+  text-align: center;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.modal-input.error {
+  border-color: #ff4757;
+}
+
+.error-message {
+  color: #ff4757;
+  font-size: 0.85rem;
+  margin: 5px 0 15px 0;
+  text-align: left;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.btn-primary, .btn-secondary {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #007AFF;
+  color: white;
+}
+
+.btn-secondary {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+/* 禁用状态样式 */
+.feature-item.disabled {
+  opacity: 0.6;
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.lock-icon {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: #ff6b6b;
 }
 
 .h5-footer {

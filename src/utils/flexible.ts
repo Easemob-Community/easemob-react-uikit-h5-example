@@ -38,7 +38,7 @@ import 'fastclick';
   setRootFontSize();
 
   // 初始化FastClick，解决移动端300ms点击延迟
-  if ('addEventListener' in document) {
+  if ('addEventListener' in document && typeof (window as any).FastClick !== 'undefined') {
     document.addEventListener('DOMContentLoaded', function() {
       (window as any).FastClick.attach(document.body);
     }, false);
