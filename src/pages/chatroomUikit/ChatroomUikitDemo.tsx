@@ -21,8 +21,8 @@ const ChatroomUikitDemo: React.FC = () => {
     setShowAppKeyModal(false);
   };
 
-  // 如果没有appKey，只显示弹窗
-  if (!appKey) {
+  // 如果没有appKey且没有显示修改弹窗，才显示初始设置弹窗
+  if (!appKey && showAppKeyModal) {
     return (
       <AppKeyModal 
         isOpen={showAppKeyModal} 
@@ -40,10 +40,27 @@ const ChatroomUikitDemo: React.FC = () => {
     return null; // 让独立页面组件来渲染
   }
 
+  const handleAppKeyChange = () => {
+    setShowAppKeyModal(true);
+  };
+
   return (
     <div className="h5-container">
       <header className="h5-header">
         <h1>Chatroom UIKIT演示</h1>
+        <div className="app-key-display">
+          <span>当前App Key: {appKey || '未设置'}</span>
+          <button onClick={handleAppKeyChange} className="change-appkey-btn">
+            {appKey ? '修改' : '设置'} App Key
+          </button>
+        </div>
+        {showAppKeyModal && (
+          <AppKeyModal 
+            isOpen={showAppKeyModal} 
+            onClose={() => setShowAppKeyModal(false)}
+            onConfirm={handleConfirmAppKey} 
+          />
+        )}
       </header>
       
       <main className="h5-main">

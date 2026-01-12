@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAppStore } from '../store/appStore';
 
 interface AppKeyModalProps {
@@ -8,9 +8,16 @@ interface AppKeyModalProps {
 }
 
 const AppKeyModal: React.FC<AppKeyModalProps> = ({ isOpen, onClose, onConfirm }) => {
-  const [inputValue, setInputValue] = useState('');
+  const { appKey, setAppKey } = useAppStore();
+  const [inputValue, setInputValue] = useState(appKey || '');
   const [error, setError] = useState('');
-  const { setAppKey } = useAppStore();
+
+  // 监听 appKey 变化，确保弹窗打开时能回显最新值
+  useEffect(() => {
+    if (isOpen) {
+      setInputValue(appKey || '');
+    }
+  }, [isOpen, appKey]);
 
   if (!isOpen) return null;
 
