@@ -1,7 +1,11 @@
 /**
  * 移动端适配方案 - flexible.js 简化版
  * 用于处理不同移动设备的像素比和屏幕适配问题
+ * 同时集成了FastClick功能以解决移动端300ms点击延迟
  */
+
+// 导入FastClick
+import 'fastclick';
 
 (function () {
   const docEl = document.documentElement;
@@ -32,4 +36,11 @@
 
   // 初始化
   setRootFontSize();
+
+  // 初始化FastClick，解决移动端300ms点击延迟
+  if ('addEventListener' in document) {
+    document.addEventListener('DOMContentLoaded', function() {
+      (window as any).FastClick.attach(document.body);
+    }, false);
+  }
 })();
