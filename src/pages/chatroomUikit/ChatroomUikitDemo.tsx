@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAppStore } from '../../store/appStore';
 import AppKeyModal from '../../components/AppKeyModal';
+import ChatroomUIKitComponent from '../../components/ChatroomUIKitComponent';
 
 const ChatroomUikitDemo: React.FC = () => {
   const [showAppKeyModal, setShowAppKeyModal] = useState(true); // 默认显示弹窗
   const { appKey } = useAppStore();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     // 如果已经有appKey，则隐藏弹窗
@@ -30,6 +32,14 @@ const ChatroomUikitDemo: React.FC = () => {
     );
   }
 
+  // 获取当前URL路径以确定是否显示内容
+  const currentPath = location.pathname;
+  
+  // 如果是在聊天室或成员页面，不显示这里的主内容
+  if (currentPath === '/chatroom-uikit/chatroom' || currentPath === '/chatroom-uikit/members') {
+    return null; // 让独立页面组件来渲染
+  }
+
   return (
     <div className="h5-container">
       <header className="h5-header">
@@ -41,26 +51,8 @@ const ChatroomUikitDemo: React.FC = () => {
           <h2>聊天室功能演示</h2>
           <p>这是Chatroom UIKIT的演示页面，展示聊天室功能</p>
           
-          <div className="features">
-            <div className="feature-item">
-              <h3>💬 大型聊天室</h3>
-              <p>支持大量用户同时在线的聊天室</p>
-            </div>
-            
-            <div className="feature-item">
-              <h3>🎤 聊天室权限</h3>
-              <p>管理员、发言者、听众等不同权限角色</p>
-            </div>
-            
-            <div className="feature-item">
-              <h3>📊 实时互动</h3>
-              <p>实时消息、弹幕、礼物等互动功能</p>
-            </div>
-          </div>
-          
-          <div className="demo-placeholder">
-            <p>这里将集成环信Chatroom UIKIT组件</p>
-            {/* 这里将放置实际的Chatroom UIKIT组件 */}
+          <div className="chatroom-uikit-container">
+            <ChatroomUIKitComponent />
           </div>
         </section>
       </main>
