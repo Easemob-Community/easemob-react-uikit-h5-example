@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import FullUikitDemo from './pages/fullUikit/FullUikitDemo';
 import ChatroomUikitDemo from './pages/chatroomUikit/ChatroomUikitDemo';
-import { ChatroomEntryPoint } from './components/ChatroomComponents';
+import { ChatroomEntryPoint } from './components/chatroom/ChatroomComponents';
 
 const AppRouter: React.FC = () => {
   return (

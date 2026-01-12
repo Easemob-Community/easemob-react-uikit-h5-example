@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAppStore } from '../../store/appStore';
 import AppKeyModal from '../../components/AppKeyModal';
-import ChatroomUIKitComponent from '../../components/ChatroomUIKitComponent';
+import ChatroomUIKitComponent from '../../components/chatroom/ChatroomUIKitComponent';
 
 const ChatroomUikitDemo: React.FC = () => {
   const [showAppKeyModal, setShowAppKeyModal] = useState(true); // 默认显示弹窗

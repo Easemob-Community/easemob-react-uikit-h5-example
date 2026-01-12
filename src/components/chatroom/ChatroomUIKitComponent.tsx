@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
 import { observer } from "mobx-react-lite";
 import "easemob-chat-uikit/style.css";
-import { useAppStore } from '../store/appStore';
+import { useAppStore } from '../../store/appStore';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useClient } from 'easemob-chat-uikit'
+
 const ChatroomUIKitComponent: React.FC = observer(() => {
-  const { appKey, userId, token, chatroomId, setUserInfo } = useAppStore();
+  const { userId, token, chatroomId, setUserInfo } = useAppStore();
   const navigate = useNavigate();
   const location = useLocation();
   
-  // 从全局状态获取appKey，如果没有则使用空字符串
-  const actualAppKey = appKey || "";
+
   
   // 从全局状态获取用户信息
   const [localUserId, setLocalUserId] = useState(userId);

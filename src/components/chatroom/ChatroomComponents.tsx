@@ -1,7 +1,7 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { UIKitProvider, Chatroom, ChatroomMember, useClient } from "easemob-chat-uikit";
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAppStore } from '../store/appStore';
+import { useAppStore } from '../../store/appStore';
 import type { ChatSDK } from 'easemob-chat-uikit/types/module/SDK';
 
 // 统一的聊天室入口组件，包含所有聊天室相关功能
@@ -100,22 +100,24 @@ const ChatroomPageContent: React.FC = () => {
                 <button
                     onClick={() => navigate('/chatroom-uikit')}
                     className={'back-button'}
+                    style={{ color: 'black' }}
                 >
                     ← 返回
                 </button>
                 <div className="nav-tabs">
-                    <button
+                    {/* <button
                         onClick={() => navigate('/chatroom-uikit/chatroom')}
                         className={'nav-button active'}
                     >
                         聊天室
-                    </button>
-                    <button
+                    </button> */}
+                    {/* <button
                         onClick={() => navigate('/chatroom-uikit/members')}
                         className={'nav-button'}
+                        style={{ color: 'black' }}
                     >
                         成员
-                    </button>
+                    </button> */}
                 </div>
             </div>
             <div className="chatroom-full-section">
