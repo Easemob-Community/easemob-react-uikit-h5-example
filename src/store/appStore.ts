@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 interface AppState {
   appKey: string | null;
@@ -11,13 +12,21 @@ interface AppState {
   clearUserInfo: () => void;
 }
 
-export const useAppStore = create<AppState>((set) => ({
-  appKey: null,
-  userId: '',
-  token: '',
-  chatroomId: '',
-  setAppKey: (appKey) => set({ appKey }),
-  setUserInfo: (userId, token, chatroomId) => set({ userId, token, chatroomId }),
-  clearAppKey: () => set({ appKey: null }),
-  clearUserInfo: () => set({ userId: '', token: '', chatroomId: '' }),
-}));
+export const useAppStore = create<AppState>()(
+  persist(
+    (set) => ({
+      appKey: null,
+      userId: '',
+      token: '',
+      chatroomId: '',
+      setAppKey: (appKey) => set({ appKey }),
+      setUserInfo: (userId, token, chatroomId) => set({ userId, token, chatroomId }),
+      clearAppKey: () => set({ appKey: null }),
+      clearUserInfo: () => set({ userId: '', token: '', chatroomId: '' }),
+    }),
+    {
+      name: 'app-storage', // 存储名称
+      storage: createJSONStorage(() => localStorage), // 使用 localStorage
+    }
+  )
+);
