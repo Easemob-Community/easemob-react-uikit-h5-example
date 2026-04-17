@@ -30,6 +30,7 @@ const ChatroomEntryPoint: React.FC = () => {
             }}
             initConfig={{
                 appKey: appKey || "",
+                countMemberJoinToUnread:false
             }}
             local={{
                 lng: "zh",
