@@ -13,6 +13,10 @@ const Home: React.FC = () => {
     navigate('/chatroom-uikit');
   };
 
+  const handleOpenCustomerService = () => {
+    navigate('/customer-service');
+  };
+
   return (
     <div className="h5-container">
       <header className="h5-header">
@@ -39,6 +43,14 @@ const Home: React.FC = () => {
             >
               <h3>🗨️ Chatroom UIKIT演示</h3>
               <p>展示聊天室功能使用方式</p>
+            </div>
+            
+            <div 
+              className="feature-item link"
+              onClick={handleOpenCustomerService}
+            >
+              <h3>🎧 客服场景演示</h3>
+              <p>模拟客服接入流程，点击问题快速进入群组对话</p>
             </div>
           </div>
         </section>

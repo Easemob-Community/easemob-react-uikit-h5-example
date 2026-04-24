@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import FullUikitDemo from './pages/fullUikit/FullUikitDemo';
 import ChatroomUikitDemo from './pages/chatroomUikit/ChatroomUikitDemo';
+import CustomerServiceScenario from './pages/customerService/CustomerServiceScenario';
+import CustomerServiceChat from './pages/customerService/CustomerServiceChat';
 import { ChatroomEntryPoint } from './components/chatroom/ChatroomComponents';
 
 const AppRouter: React.FC = () => {
@@ -14,6 +16,8 @@ const AppRouter: React.FC = () => {
         <Route path="/chatroom-uikit" element={<ChatroomUikitDemo />} />
         <Route path="/chatroom-uikit/chatroom" element={<ChatroomEntryPoint />} />
         <Route path="/chatroom-uikit/members" element={<ChatroomEntryPoint />} />
+        <Route path="/customer-service" element={<CustomerServiceScenario />} />
+        <Route path="/customer-service/chat" element={<CustomerServiceChat />} />
       </Routes>
     </Router>
   );

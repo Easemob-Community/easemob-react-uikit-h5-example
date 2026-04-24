@@ -1,0 +1,372 @@
+/* ==================== 客服场景页面样式 ==================== */
+
+/* 客服场景 - 顶部导航 */
+.cs-nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.cs-nav-back {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #f5f5f5;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  padding: 0;
+}
+
+.cs-nav-back:active {
+  background: #e8e8e8;
+}
+
+.cs-nav-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.cs-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cs-nav-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  padding: 0;
+}
+
+/* 客服场景 - 主体 */
+.cs-scenario-page {
+  background: linear-gradient(180deg, #f8f6ff 0%, #ffffff 120px);
+}
+
+.cs-scenario-body {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+/* SVIP 卡片 */
+.cs-vip-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #e0d4fc 0%, #c5b3f7 100%);
+  border-radius: 16px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 16px rgba(126, 87, 194, 0.15);
+}
+
+.cs-vip-left {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cs-vip-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #4a3b6b;
+}
+
+.cs-vip-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cs-vip-tag {
+  font-size: 0.65rem;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 10px;
+  color: #fff;
+}
+
+.cs-vip-tag.blue {
+  background: linear-gradient(135deg, #7ea1ff, #5b8def);
+}
+
+.cs-vip-tag.purple {
+  background: linear-gradient(135deg, #b088f9, #9c6ff3);
+}
+
+.cs-vip-tag.orange {
+  background: linear-gradient(135deg, #ffb07c, #ff9a5c);
+}
+
+.cs-vip-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.cs-vip-price {
+  font-size: 0.7rem;
+  color: #7e57c2;
+  font-weight: 500;
+  background: rgba(255,255,255,0.6);
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+
+.cs-vip-btn {
+  background: linear-gradient(135deg, #ff9a5c 0%, #ff7e5f 100%);
+  color: white;
+  border: none;
+  padding: 7px 16px;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 2px 8px rgba(255, 126, 95, 0.3);
+}
+
+.cs-vip-btn:active {
+  transform: scale(0.96);
+}
+
+/* 问候语 */
+.cs-greeting {
+  margin-bottom: 20px;
+}
+
+.cs-greeting-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.cs-greeting-text {
+  font-size: 0.85rem;
+  color: #555;
+  line-height: 1.6;
+  background: #f5f3ff;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border-top-left-radius: 4px;
+  display: inline-block;
+}
+
+/* 板块标题 */
+.cs-section-title {
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+/* 服务卡片网格 */
+.cs-service-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.cs-service-card {
+  background: #fff;
+  border: 1px solid #f0eefc;
+  border-radius: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cs-service-card:active {
+  transform: scale(0.97);
+}
+
+.cs-service-card:hover {
+  box-shadow: 0 4px 12px rgba(126, 87, 194, 0.1);
+  border-color: #d4c8f5;
+}
+
+.cs-service-card-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.cs-service-icon {
+  font-size: 1.1rem;
+}
+
+.cs-service-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.cs-service-desc {
+  font-size: 0.7rem;
+  color: #999;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 底部输入 */
+.cs-bottom-input {
+  padding: 10px 16px 16px;
+  background: #fff;
+  border-top: 1px solid #f0f0f0;
+}
+
+.cs-input-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f5f5f5;
+  border-radius: 20px;
+  padding: 8px 14px;
+}
+
+.cs-input-field {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 0.9rem;
+  color: #999;
+  outline: none;
+}
+
+.cs-input-voice {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #fff;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+/* Loading 遮罩 */
+.cs-loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.cs-loading-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.cs-loading-spinner {
+  position: relative;
+  width: 56px;
+  height: 56px;
+}
+
+.cs-spinner-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: #7e57c2;
+  animation: spinnerSpin 1.2s linear infinite;
+}
+
+.cs-spinner-ring:nth-child(1) {
+  animation-duration: 1.2s;
+}
+
+.cs-spinner-ring:nth-child(2) {
+  animation-duration: 1.5s;
+  border-top-color: #b388ff;
+  width: 80%;
+  height: 80%;
+  top: 10%;
+  left: 10%;
+}
+
+.cs-spinner-ring:nth-child(3) {
+  animation-duration: 1s;
+  border-top-color: #d1c4e9;
+  width: 60%;
+  height: 60%;
+  top: 20%;
+  left: 20%;
+}
+
+@keyframes spinnerSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.cs-loading-text {
+  text-align: center;
+}
+
+.cs-loading-text p {
+  font-size: 0.95rem;
+  color: #555;
+  font-weight: 500;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.cs-loading-text p + p {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: 400;
+}
