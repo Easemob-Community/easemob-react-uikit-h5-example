@@ -16,12 +16,15 @@ import type { Conversation } from 'easemob-chat-uikit/types/module/store/Convers
 
 // 登录表单组件
 const LoginForm: React.FC<{
+  savedAppKey: string | null;
   onLogin: (appKey: string, userId: string, password: string) => void;
-}> = ({ onLogin }) => {
-  const [appKeyInput, setAppKeyInput] = useState('');
+  onOpenAppKeyModal: () => void;
+}> = ({ savedAppKey, onLogin, onOpenAppKeyModal }) => {
+  const [appKeyInput, setAppKeyInput] = useState(savedAppKey || '');
   const [userIdInput, setUserIdInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
   const [error, setError] = useState('');
+  const [focusedField, setFocusedField] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,60 +33,100 @@ const LoginForm: React.FC<{
       return;
     }
     if (!userIdInput.trim()) {
-      setError('请输入 UserId');
+      setError('请输入用户 ID');
       return;
     }
     if (!passwordInput.trim()) {
-      setError('请输入 Password');
+      setError('请输入密码');
       return;
     }
     setError('');
     onLogin(appKeyInput.trim(), userIdInput.trim(), passwordInput.trim());
   };
 
+  const isFilled = (v: string) => v.length > 0;
+
   return (
-    <div className="chatroom-app-container">
-      <form onSubmit={handleSubmit} className="login-section">
-        <h2 style={{ textAlign: 'center', marginBottom: 20, color: '#333' }}>
-          单群聊 UIKIT 登录
-        </h2>
-        {error && (
-          <p style={{ color: '#ff4757', textAlign: 'center', marginBottom: 10 }}>
-            {error}
-          </p>
-        )}
-        <div className="input-group">
-          <label>AppKey</label>
-          <input
-            type="text"
-            value={appKeyInput}
-            onChange={(e) => setAppKeyInput(e.target.value)}
-            placeholder="请输入 AppKey"
-            className="input-field"
-          />
+    <div className="login-form-container">
+      <div className="login-form-header">
+        <div className="login-form-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#667eea" strokeWidth="1.5">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+          </svg>
         </div>
-        <div className="input-group">
-          <label>用户ID</label>
+        <h2 className="login-form-title">单群聊 UIKIT</h2>
+        <p className="login-form-subtitle">请输入您的账号信息以继续</p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="login-form">
+        {error && <div className="login-form-error">{error}</div>}
+
+        <div className={`form-row ${focusedField === 'appKey' ? 'focused' : ''} ${isFilled(appKeyInput) ? 'filled' : ''}`}>
+          <label className="form-row-label">AppKey</label>
+          <div className="form-row-input-wrap">
+            <input
+              type="text"
+              value={appKeyInput}
+              onChange={(e) => {
+                setAppKeyInput(e.target.value);
+                if (error) setError('');
+              }}
+              onFocus={() => setFocusedField('appKey')}
+              onBlur={() => setFocusedField(null)}
+              placeholder="请输入 AppKey"
+              className="form-row-input"
+              autoComplete="off"
+            />
+            <button
+              type="button"
+              className="form-row-suffix-btn"
+              onClick={onOpenAppKeyModal}
+              title="配置 AppKey"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div className={`form-row ${focusedField === 'userId' ? 'focused' : ''} ${isFilled(userIdInput) ? 'filled' : ''}`}>
+          <label className="form-row-label">用户 ID</label>
           <input
             type="text"
             value={userIdInput}
-            onChange={(e) => setUserIdInput(e.target.value)}
+            onChange={(e) => {
+              setUserIdInput(e.target.value);
+              if (error) setError('');
+            }}
+            onFocus={() => setFocusedField('userId')}
+            onBlur={() => setFocusedField(null)}
             placeholder="请输入用户ID"
-            className="input-field"
+            className="form-row-input"
+            autoComplete="username"
           />
         </div>
-        <div className="input-group">
-          <label>密码</label>
+
+        <div className={`form-row ${focusedField === 'password' ? 'focused' : ''} ${isFilled(passwordInput) ? 'filled' : ''}`}>
+          <label className="form-row-label">密码</label>
           <input
             type="password"
             value={passwordInput}
-            onChange={(e) => setPasswordInput(e.target.value)}
+            onChange={(e) => {
+              setPasswordInput(e.target.value);
+              if (error) setError('');
+            }}
+            onFocus={() => setFocusedField('password')}
+            onBlur={() => setFocusedField(null)}
             placeholder="请输入密码"
-            className="input-field"
+            className="form-row-input"
+            autoComplete="current-password"
           />
         </div>
-        <button type="submit" className="login-button">
-          登录
+
+        <button type="submit" className="login-submit-btn">
+          <span>登 录</span>
         </button>
       </form>
     </div>
@@ -94,14 +137,12 @@ const LoginForm: React.FC<{
 const ChatContent: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div className="top-navigation">
-        <button type="button" onClick={onBack} className="back-button" style={{ color: 'black' }}>
-          ← 返回
-        </button>
-      </div>
-      <div style={{ flex: 1, overflow: 'hidden' }}>
-        <Chat />
-      </div>
+      <Chat
+        headerProps={{
+          back: true,
+          onClickBack: onBack,
+        }}
+      />
     </div>
   );
 };
@@ -271,27 +312,55 @@ const MeContent: React.FC<{ userId: string; onLogout: () => void }> = ({ userId,
   );
 };
 
+// TabBar 图标
+const TabMessageIcon: React.FC = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+  </svg>
+);
+
+const TabContactIcon: React.FC = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+    <circle cx="9" cy="7" r="4" />
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+  </svg>
+);
+
+const TabMeIcon: React.FC = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+    <circle cx="12" cy="7" r="4" />
+  </svg>
+);
+
 // TabBar 组件
 const TabBar: React.FC<{
   activeTab: 'conversation' | 'contact' | 'me';
   onTabChange: (tab: 'conversation' | 'contact' | 'me') => void;
   unreadCount?: number;
 }> = ({ activeTab, onTabChange, unreadCount = 0 }) => {
-  const tabs: { key: 'conversation' | 'contact' | 'me'; label: string; icon: string }[] = [
-    { key: 'conversation', label: '会话', icon: '💬' },
-    { key: 'contact', label: '联系人', icon: '👥' },
-    { key: 'me', label: '我的', icon: '👤' },
+  const tabs: {
+    key: 'conversation' | 'contact' | 'me';
+    label: string;
+    Icon: React.FC<{ active: boolean }>;
+  }[] = [
+    { key: 'conversation', label: '会话', Icon: TabMessageIcon },
+    { key: 'contact', label: '联系人', Icon: TabContactIcon },
+    { key: 'me', label: '我的', Icon: TabMeIcon },
   ];
 
+  const activeIndex = tabs.findIndex((t) => t.key === activeTab);
+
   return (
-    <div
-      style={{
-        display: 'flex',
-        height: 56,
-        borderTop: '1px solid #e5e5e5',
-        background: '#fff',
-      }}
-    >
+    <div className="tabbar">
+      <div
+        className="tabbar-indicator"
+        style={{
+          transform: `translateX(${activeIndex * 100}%)`,
+        }}
+      />
       {tabs.map((tab) => {
         const isActive = activeTab === tab.key;
         return (
@@ -299,49 +368,17 @@ const TabBar: React.FC<{
             key={tab.key}
             type="button"
             onClick={() => onTabChange(tab.key)}
-            style={{
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 2,
-              background: 'transparent',
-              border: 'none',
-              cursor: 'pointer',
-              position: 'relative',
-            }}
+            className={`tabbar-item ${isActive ? 'active' : ''}`}
           >
-            <span style={{ fontSize: 20 }}>{tab.icon}</span>
-            <span
-              style={{
-                fontSize: 12,
-                color: isActive ? '#007AFF' : '#999',
-              }}
-            >
-              {tab.label}
-            </span>
-            {tab.key === 'conversation' && unreadCount > 0 && (
-              <span
-                style={{
-                  position: 'absolute',
-                  top: 4,
-                  right: '30%',
-                  minWidth: 16,
-                  height: 16,
-                  borderRadius: 8,
-                  background: '#ff4757',
-                  color: '#fff',
-                  fontSize: 10,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '0 4px',
-                }}
-              >
-                {unreadCount > 99 ? '99+' : unreadCount}
-              </span>
-            )}
+            <div className="tabbar-icon-wrap">
+              <tab.Icon active={isActive} />
+              {tab.key === 'conversation' && unreadCount > 0 && (
+                <span className="tabbar-badge">
+                  {unreadCount > 99 ? '99+' : unreadCount}
+                </span>
+              )}
+            </div>
+            <span className="tabbar-label">{tab.label}</span>
           </button>
         );
       })}
@@ -464,7 +501,7 @@ const UikitMain: React.FC<{
 
 const FullUikitDemo: React.FC = () => {
   const [showAppKeyModal, setShowAppKeyModal] = useState(false);
-  const { setAppKey } = useAppStore();
+  const { appKey, setAppKey } = useAppStore();
 
   const [loginInfo, setLoginInfo] = useState<{
     appKey: string;
@@ -481,6 +518,11 @@ const FullUikitDemo: React.FC = () => {
 
   const handleLogout = () => {
     setLoginInfo(null);
+  };
+
+  const handleAppKeyConfirm = (value: string) => {
+    setAppKey(value);
+    setShowAppKeyModal(false);
   };
 
   if (isLoggedIn && loginInfo) {
@@ -518,7 +560,11 @@ const FullUikitDemo: React.FC = () => {
         <h1>完整 UIKIT 演示</h1>
       </header>
       <main className="h5-main" style={{ padding: 0 }}>
-        <LoginForm onLogin={handleLogin} />
+        <LoginForm
+          savedAppKey={appKey}
+          onLogin={handleLogin}
+          onOpenAppKeyModal={() => setShowAppKeyModal(true)}
+        />
       </main>
       <footer className="h5-footer">
         <Link to="/">返回首页</Link>
@@ -527,7 +573,7 @@ const FullUikitDemo: React.FC = () => {
       <AppKeyModal
         isOpen={showAppKeyModal}
         onClose={() => setShowAppKeyModal(false)}
-        onConfirm={() => setShowAppKeyModal(false)}
+        onConfirm={handleAppKeyConfirm}
       />
     </div>
   );
