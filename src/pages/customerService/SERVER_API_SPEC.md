@@ -5,6 +5,19 @@
 
 ---
 
+## 0. 前端接入状态
+
+当前前端代码（`CustomerServiceScenario.tsx`、`CustomerServiceChat.tsx`）已完成接口规范对接的**注释和示例代码准备**，尚未启用实际接口调用。集成方按本文档实现后端接口后，前端只需**取消对应注释**即可切换为接口化模式，同时保留手动配置弹窗作为降级方案。
+
+**前端文件位置**：
+- 配置获取与建群逻辑：`src/pages/customerService/CustomerServiceScenario.tsx`
+- IM 登录与会话设置：`src/pages/customerService/CustomerServiceChat.tsx`
+- 全局状态管理：`src/store/appStore.ts`
+
+**切换方式**：在前端代码中搜索 "【接口化改造】" 注释，按注释指引取消对应代码块注释即可。
+
+---
+
 ## 1. 接口总览
 
 | 序号 | 接口名 | 触发时机 | 说明 |
@@ -242,12 +255,59 @@ Content-Type: application/json
 
 ---
 
-## 7. 前端适配说明（供参考）
+## 7. 前端适配说明
 
 当前前端代码中，配置信息（AppKey / userId / password / groupId）是手动填入的。接入真实服务端后，前端将按以下方式改造：
 
-1. 进入「云管家」页面时调用 `GET /api/customer-service/config`，将返回的 `appKey`、`imUserId`、`imToken` 存入状态
-2. 点击服务卡片时调用 `POST /api/customer-service/session`，将返回的 `groupId` 存入状态
-3. 进入聊天页时，使用上述数据初始化 `UIKitProvider` 并执行 `client.open()` 登录
+### 7.1 改造流程
 
-> 前端改造由前端开发负责，服务端只需按本文档实现上述 2 个接口即可。
+1. **进入「云管家」页面时**（`CustomerServiceScenario.tsx`）：
+   - 调用 `GET /api/customer-service/config`
+   - 将返回的 `appKey`、`imUserId`、`imToken`（或 `imPassword`）通过 `setCsConfig()` 存入 appStore
+   - 此时 `groupId` 留空，因为尚未选择服务类型
+   - 若接口失败（网络异常、用户未登录），保持未配置状态，由手动配置弹窗降级处理
+
+2. **点击服务卡片时**（`CustomerServiceScenario.tsx`）：
+   - 调用 `POST /api/customer-service/session`，传入 `serviceType` 和 `serviceName`
+   - 将返回的 `groupId` 追加到现有配置中（再次调用 `setCsConfig`，保留 appKey / userId / password）
+   - 可直接将 `groupName` 也存入状态，供聊天页标题展示
+   - 立即导航至 `/customer-service/chat`
+
+3. **进入聊天页时**（`CustomerServiceChat.tsx`）：
+   - 从 appStore 读取 `csAppKey`、`csUserId`、`csPassword`（或 token）、`csGroupId`
+   - 使用上述数据初始化 `UIKitProvider` 并执行 `client.open()` 登录
+   - 若后端返回的是 token，将 `client.open({ user, pwd })` 改为 `client.open({ user, accessToken: token })`
+
+### 7.2 前端代码修改点
+
+| 文件 | 搜索关键词 | 操作 |
+|------|-----------|------|
+| `CustomerServiceScenario.tsx` | `【接口化改造 - 步骤1】` | 取消 `useEffect` 自动获取配置代码块的注释 |
+| `CustomerServiceScenario.tsx` | `【接口化改造 - 步骤2】` | 取消自动建群代码块的注释，删除/注释原有 `setTimeout` 模拟逻辑 |
+| `CustomerServiceChat.tsx` | `【接口化改造】若后端返回 token` | 将 `pwd` 替换为 `accessToken` |
+| `CustomerServiceChat.tsx` | `【接口化改造】groupName` | 改为从状态读取动态 groupName（可选） |
+
+### 7.3 保留弹窗降级逻辑
+
+接口化改造后，手动配置弹窗**仍应保留**，作为以下场景的降级方案：
+- 后端接口暂时不可用或响应超时
+- 用户未登录（`/config` 返回 401）
+- 开发调试时需要快速切换不同客服账号测试
+
+前端判断逻辑不变：当 `csAppKey && csUserId && csPassword && csGroupId` 四项均为空时，点击卡片仍弹出配置面板。
+
+> 服务端只需按本文档实现上述 2 个接口即可，前端改造已由示例代码覆盖。
+
+---
+
+## 8. 快速接入检查清单
+
+- [ ] 后端实现 `GET /api/customer-service/config` 接口，返回 `appKey`、`imUserId`、`imToken`（或 `imPassword`）
+- [ ] 后端实现 `POST /api/customer-service/session` 接口，支持按 `serviceType` 创建/复用群组
+- [ ] 后端确认 8 类服务类型的 `serviceType` 常量与前端一致（`errand`、`medical`、`child`、`elderly`、`pet`、`travel`、`sports`、`universal`）
+- [ ] 前端取消 `CustomerServiceScenario.tsx` 中步骤 1 的 `useEffect` 注释块
+- [ ] 前端取消 `CustomerServiceScenario.tsx` 中步骤 2 的自动建群注释块，删除原有 `setTimeout` 模拟逻辑
+- [ ] 前端将 `yourJwtToken` 替换为实际的用户鉴权 token 获取逻辑
+- [ ] （推荐）若后端返回 token，修改 `CustomerServiceChat.tsx` 中的 `client.open()` 使用 `accessToken`
+- [ ] 测试未配置时的弹窗降级是否正常（断开后端或返回 401）
+- [ ] 测试接口正常时的完整流程：进入页面 -> 自动获取配置 -> 点击卡片 -> 自动建群 -> 进入聊天

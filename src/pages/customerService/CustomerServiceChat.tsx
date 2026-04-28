@@ -1,3 +1,22 @@
+/**
+ * ============================================================================
+ * 客服聊天页面 - CustomerServiceChat.tsx
+ * ============================================================================
+ *
+ * 【职责】初始化环信 UIKit，执行 IM 登录，并设置当前会话为客服群组。
+ *
+ * 【数据来源】当前从 appStore 读取 csAppKey / csUserId / csPassword / csGroupId。
+ *   - 手动配置模式下：这些数据来自用户弹窗输入，持久化在 localStorage
+ *   - 接口化改造后：这些数据来自 GET /api/customer-service/config 和
+ *     POST /api/customer-service/session 的响应，同样通过 appStore 流转
+ *
+ * 【接口化改造要点】
+ *   1. 若后端返回 imToken（推荐），将 client.open({ user, pwd }) 改为
+ *      client.open({ user, accessToken: token })，安全性更高
+ *   2. groupName 当前写死为 "云管家客服"；接口化后可从 /session 接口的
+ *      groupName 字段动态获取，提升体验
+ * ============================================================================
+ */
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -49,6 +68,15 @@ const UikitMain: React.FC<{
       .open({
         user: userId,
         pwd: password,
+        /*
+         * 【接口化改造】若后端返回 token（推荐，更安全），使用以下方式登录：
+         *
+         * accessToken: token,  // 将 pwd 替换为 accessToken
+         *
+         * 注意：token 和 password 二选一即可，优先使用 token。
+         * 若使用 token，需确保 CustomerServiceScenario.tsx 中的 setCsConfig
+         * 将 token 存入 password 字段（或新增 token 字段并同步修改此处传参）。
+         */
       })
       .then(() => {
         console.log('客服场景登录成功');
@@ -127,6 +155,10 @@ const UikitMain: React.FC<{
 
 const CustomerServiceChat: React.FC = () => {
   const navigate = useNavigate();
+  // 【数据来源说明】csAppKey / csUserId / csPassword / csGroupId 来自 appStore
+  // 手动配置模式：用户弹窗输入 -> setCsConfig -> localStorage 持久化
+  // 接口化改造后：GET /api/customer-service/config -> setCsConfig -> 此处读取
+  //               POST /api/customer-service/session -> 返回 groupId -> setCsConfig -> 此处读取
   const { csAppKey, csUserId, csPassword, csGroupId } = useAppStore();
 
   const handleBack = () => {
@@ -147,6 +179,12 @@ const CustomerServiceChat: React.FC = () => {
           userId={csUserId}
           password={csPassword}
           groupId={csGroupId}
+          /*
+           * 【接口化改造】groupName 当前写死，可从 /session 接口动态获取：
+           * 1. 在 appStore 中新增 csGroupName 字段
+           * 2. CustomerServiceScenario.tsx 中收到 /session 响应后存入
+           * 3. 此处改为 groupName={csGroupName}
+           */
           groupName="云管家客服"
           onBack={handleBack}
         />
