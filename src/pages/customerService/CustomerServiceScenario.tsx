@@ -250,8 +250,12 @@ const CustomerServiceScenario: React.FC = () => {
 
       <div className="cs-bottom-input">
         <div className="cs-input-bar">
-          <input type="text" placeholder="发消息或者按住说话..." className="cs-input-field" readOnly />
-          <button className="cs-input-voice">
+          <input type="text" placeholder="发消息..." className="cs-input-field" readOnly />
+          <button
+            className="cs-input-voice"
+            onClick={() => navigate('/customer-service/voice-chat')}
+            title="语音输入演示"
+          >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
               <path d="M19 10v2a7 7 0 0 1-14 0v-2" />

@@ -1,20 +1,16 @@
 /**
  * ============================================================================
- * 客服聊天页面 - CustomerServiceChat.tsx
+ * 客服聊天页面（语音优先输入框演示版）- CustomerServiceVoiceChat.tsx
  * ============================================================================
  *
- * 【职责】初始化环信 UIKit，执行 IM 登录，并设置当前会话为客服群组。
+ * 【职责】与 CustomerServiceChat.tsx 功能完全一致，但使用自定义语音优先输入框。
  *
- * 【数据来源】当前从 appStore 读取 csAppKey / csUserId / csPassword / csGroupId。
- *   - 手动配置模式下：这些数据来自用户弹窗输入，持久化在 localStorage
- *   - 接口化改造后：这些数据来自 GET /api/customer-service/config 和
- *     POST /api/customer-service/session 的响应，同样通过 appStore 流转
+ * 【与默认版的区别】
+ *   - 本页面：Chat 组件通过 renderMessageInput 注入 CustomMessageInput
+ *   - 默认版：使用 UIKit 原生 MessageInput
  *
- * 【接口化改造要点】
- *   1. 若后端返回 imToken（推荐），将 client.open({ user, pwd }) 改为
- *      client.open({ user, accessToken: token })，安全性更高
- *   2. groupName 当前写死为 "云管家客服"；接口化后可从 /session 接口的
- *      groupName 字段动态获取，提升体验
+ * 【适用场景】
+ *   用于演示和测试微信风格的"点击录音"交互模式。
  * ============================================================================
  */
 import React, { useState, useEffect, useRef } from 'react';
@@ -28,8 +24,9 @@ import {
 import 'easemob-chat-uikit/style.css';
 import './CustomerService.css';
 import { useAppStore } from '../../store/appStore';
+import CustomMessageInput from '../../components/customerService/CustomMessageInput';
 
-// 客服聊天主内容
+// 客服聊天主内容（使用自定义语音输入框）
 const ChatContent: React.FC<{ onBack: () => void; groupName: string }> = ({ onBack, groupName }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -39,7 +36,7 @@ const ChatContent: React.FC<{ onBack: () => void; groupName: string }> = ({ onBa
           onClickBack: onBack,
           content: groupName,
         }}
-
+        renderMessageInput={() => <CustomMessageInput />}
       />
     </div>
   );
@@ -59,26 +56,12 @@ const UikitMain: React.FC<{
   const hasLogined = useRef(false);
   const hasSetConversation = useRef(false);
 
-  // 组件挂载时执行登录
   useEffect(() => {
     if (!userId || !password || hasLogined.current) return;
-
     hasLogined.current = true;
 
     client
-      .open({
-        user: userId,
-        pwd: password,
-        /*
-         * 【接口化改造】若后端返回 token（推荐，更安全），使用以下方式登录：
-         *
-         * accessToken: token,  // 将 pwd 替换为 accessToken
-         *
-         * 注意：token 和 password 二选一即可，优先使用 token。
-         * 若使用 token，需确保 CustomerServiceScenario.tsx 中的 setCsConfig
-         * 将 token 存入 password 字段（或新增 token 字段并同步修改此处传参）。
-         */
-      })
+      .open({ user: userId, pwd: password })
       .then(() => {
         console.log('客服场景登录成功');
         setLoginStatus('success');
@@ -89,24 +72,19 @@ const UikitMain: React.FC<{
       });
 
     if (client.addEventHandler) {
-      client.addEventHandler('customer-service', {
-        onConnected: () => {
-          console.log('客服场景已建立连接');
-        },
-        onDisconnected: () => {
-          console.log('客服场景连接已断开');
-        },
+      client.addEventHandler('customer-service-voice', {
+        onConnected: () => console.log('客服场景已建立连接'),
+        onDisconnected: () => console.log('客服场景连接已断开'),
       });
     }
 
     return () => {
       if (client.removeEventHandler) {
-        client.removeEventHandler('customer-service');
+        client.removeEventHandler('customer-service-voice');
       }
     };
   }, [client, userId, password]);
 
-  // 登录成功后，设置当前会话为客服群组
   useEffect(() => {
     if (loginStatus === 'success' && groupId && !hasSetConversation.current) {
       hasSetConversation.current = true;
@@ -139,12 +117,7 @@ const UikitMain: React.FC<{
     return (
       <div style={{ textAlign: 'center', paddingTop: 100 }}>
         <p style={{ color: '#ff4757' }}>登录失败，请检查客服账号配置</p>
-        <button
-          type="button"
-          onClick={onBack}
-          className="login-button"
-          style={{ width: 200, marginTop: 20 }}
-        >
+        <button type="button" onClick={onBack} className="login-button" style={{ width: 200, marginTop: 20 }}>
           返回
         </button>
       </div>
@@ -154,38 +127,25 @@ const UikitMain: React.FC<{
   return <ChatContent onBack={onBack} groupName={groupName} />;
 };
 
-const CustomerServiceChat: React.FC = () => {
+const CustomerServiceVoiceChat: React.FC = () => {
   const navigate = useNavigate();
-  // 【数据来源说明】csAppKey / csUserId / csPassword / csGroupId 来自 appStore
-  // 手动配置模式：用户弹窗输入 -> setCsConfig -> localStorage 持久化
-  // 接口化改造后：GET /api/customer-service/config -> setCsConfig -> 此处读取
-  //               POST /api/customer-service/session -> 返回 groupId -> setCsConfig -> 此处读取
   const { csAppKey, csUserId, csPassword, csGroupId } = useAppStore();
 
   const handleBack = () => {
     navigate('/customer-service');
   };
 
-  // 外层给一个明确的高度容器，不使用 h5-container 避免 flex 干扰 Chat 内部布局
   return (
     <div style={{ height: '100vh', width: '100%', maxWidth: 750, margin: '0 auto', position: 'relative', overflow: 'hidden' }}>
       <UIKitProvider
         theme={{ mode: 'light' }}
-        initConfig={{
-          appKey: csAppKey,
-        }}
+        initConfig={{ appKey: csAppKey }}
         local={{ lng: 'zh' }}
       >
         <UikitMain
           userId={csUserId}
           password={csPassword}
           groupId={csGroupId}
-          /*
-           * 【接口化改造】groupName 当前写死，可从 /session 接口动态获取：
-           * 1. 在 appStore 中新增 csGroupName 字段
-           * 2. CustomerServiceScenario.tsx 中收到 /session 响应后存入
-           * 3. 此处改为 groupName={csGroupName}
-           */
           groupName="云管家客服"
           onBack={handleBack}
         />
@@ -194,4 +154,4 @@ const CustomerServiceChat: React.FC = () => {
   );
 };
 
-export default CustomerServiceChat;
+export default CustomerServiceVoiceChat;

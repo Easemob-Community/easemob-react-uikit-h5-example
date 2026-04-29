@@ -1,0 +1,169 @@
+/* ============================================================================
+ * 微信风格自定义输入框样式（点击录音版）
+ * ============================================================================
+ *
+ * 布局：
+ *   语音模式：[键盘图标] [    点击说话    ] [表情] [+]
+ *   文本模式：[语音图标] [输入框........] [表情] [+]
+ * ============================================================================ */
+
+/* 外层容器 */
+.cs-custom-input-wrapper {
+  width: 100%;
+  background: #f7f7f7;
+  border-top: 1px solid #d9d9d9;
+}
+
+/* ==================== 通用模式切换按钮 ==================== */
+
+.cs-mode-switch-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #7f7f7f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+  padding: 0;
+  margin-bottom: 4px;
+}
+
+.cs-mode-switch-btn:active {
+  opacity: 0.6;
+}
+
+/* ==================== 语音模式 ==================== */
+
+.cs-voice-mode {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  gap: 8px;
+}
+
+/* 自定义录音按钮 */
+.cs-record-btn {
+  flex: 1;
+  height: 40px;
+  border-radius: 6px;
+  border: 1px solid #d9d9d9;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+.cs-record-btn:active {
+  background: #f0f0f0;
+}
+
+/* 录音中状态 */
+.cs-record-btn.recording {
+  background: #fff0f0;
+  border-color: #ff4757;
+}
+
+.cs-record-btn.recording:active {
+  background: #ffe0e0;
+}
+
+.cs-record-text {
+  font-size: 15px;
+  color: #1a1a1a;
+  font-weight: 500;
+  letter-spacing: 1px;
+  user-select: none;
+  -webkit-user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 录音中红色文字 */
+.cs-record-btn.recording .cs-record-text {
+  color: #ff4757;
+}
+
+/* 录音红点动画 */
+.cs-record-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff4757;
+  display: inline-block;
+  animation: recordPulse 1s ease-in-out infinite;
+}
+
+@keyframes recordPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+/* 表情和更多按钮包装器 */
+.cs-voice-actions-wrapper .cui-message-editor {
+  padding: 0;
+  gap: 8px;
+  align-items: center;
+}
+
+/* 隐藏语音模式下的文本输入框和录音按钮 */
+.cs-voice-actions-wrapper .cui-textarea,
+.cs-voice-actions-wrapper .cui-recorder {
+  display: none !important;
+}
+
+/* ==================== 文本模式 ==================== */
+
+.cs-text-mode {
+  display: flex;
+  align-items: flex-end;
+  padding: 8px 10px;
+  gap: 8px;
+}
+
+/* 文本输入区域包装器 */
+.cs-text-input-wrapper {
+  flex: 1;
+}
+
+.cs-text-input-wrapper .cui-message-editor {
+  padding: 0;
+  gap: 8px;
+  align-items: center;
+}
+
+/* 隐藏文本模式下的录音按钮 */
+.cs-text-input-wrapper .cui-recorder {
+  display: none !important;
+}
+
+/* 文本输入框样式微调 */
+.cs-text-input-wrapper .cui-textarea {
+  flex: 1;
+}
+
+.cs-text-input-wrapper .cui-textarea-input {
+  min-height: 40px;
+  max-height: 120px;
+  padding: 9px 12px;
+  border-radius: 6px;
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+/* 表情和更多按钮微调 */
+.cs-text-input-wrapper .icon-container,
+.cs-voice-actions-wrapper .icon-container {
+  margin-bottom: 2px;
+}

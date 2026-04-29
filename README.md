@@ -135,6 +135,44 @@ UIKIT 内置多语言支持，默认使用中文（zh）语言包。
 - 首页：`/` - 选择演示类型的入口页面
 - 完整UIKIT：`/full-uikit` - 展示单聊和群聊功能
 - Chatroom UIKIT：`/chatroom-uikit` - 展示聊天室功能
+- 客服场景：`/customer-service` - 模拟客服接入流程
+- 语音客服：`/customer-service/voice-chat` - 语音优先输入框演示
+
+## 客服场景演示
+
+### 功能介绍
+
+客服场景模拟了真实的客服接入流程，包含服务选择、账号配置、群组对话等功能。
+
+### 两种输入模式
+
+首页点击"客服场景演示"后，会弹出模式选择框：
+
+| 模式 | 路径 | 输入框类型 | 说明 |
+|------|------|-----------|------|
+| 基础客服 | `/customer-service/chat` | UIKit 默认输入框 | 标准文本输入，支持文字、表情、图片、文件等 |
+| 语音客服 | `/customer-service/voice-chat` | 自定义语音优先输入框 | 默认显示语音按钮，点击录音发送语音消息 |
+
+### 语音优先输入框
+
+**交互方式**：点击开始录音 → 再次点击结束并发送
+
+**技术实现**：
+- 基于 Web Audio API 自行封装录音逻辑（`createHZRecorder`）
+- 编码为 WAV 格式发送给环信 SDK
+- 复用 UIKit `messageStore.sendMessage` 发送，保证消息状态一致性
+- 录音时长限制 60 秒，少于 1 秒自动取消
+
+**相关文件**：
+- `src/components/customerService/CustomMessageInput.tsx` — 自定义输入框组件
+- `src/components/customerService/CustomMessageInput.css` — 配套样式
+- `src/pages/customerService/CustomerServiceVoiceChat.tsx` — 语音客服页面
+
+### 页面路由
+
+- `/customer-service` — 客服场景首页（服务选择、账号配置）
+- `/customer-service/chat` — 基础客服聊天页
+- `/customer-service/voice-chat` — 语音客服聊天页
 
 ## 注意事项
 
