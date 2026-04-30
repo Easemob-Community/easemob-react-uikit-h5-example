@@ -134,6 +134,7 @@ const CustomMessageInput: React.FC<MessageInputProps> = (props) => {
   const [isTextMode, setIsTextMode] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [recordDuration, setRecordDuration] = useState(0);
+  const [isVoiceSupported, setIsVoiceSupported] = useState(true);
 
   const { rootStore } = useContext(RootContext);
   const { ChatSDK } = useSDK();
@@ -165,6 +166,22 @@ const CustomMessageInput: React.FC<MessageInputProps> = (props) => {
   useEffect(() => {
     return () => cleanup();
   }, [cleanup]);
+
+  // 检测当前环境是否支持录音（微信小程序/App webview 不支持 getUserMedia）
+  useEffect(() => {
+    const supported = !!(
+      navigator.mediaDevices &&
+      typeof navigator.mediaDevices.getUserMedia === 'function' &&
+      typeof window.AudioContext === 'function'
+    );
+    // 避免同步 setState，使用微任务
+    Promise.resolve().then(() => {
+      setIsVoiceSupported(supported);
+      if (!supported) {
+        setIsTextMode(true);
+      }
+    });
+  }, []);
 
   // 开始录音
   const startRecording = useCallback(async () => {
@@ -247,6 +264,8 @@ const CustomMessageInput: React.FC<MessageInputProps> = (props) => {
     }
   }, [isRecording, startRecording, stopRecording]);
 
+
+
   const switchToTextMode = useCallback(() => {
     if (isRecording) cleanup();
     setIsTextMode(true);
@@ -307,19 +326,21 @@ const CustomMessageInput: React.FC<MessageInputProps> = (props) => {
       ) : (
         /* 文本模式 */
         <div className="cs-text-mode">
-          <button
-            type="button"
-            className="cs-mode-switch-btn"
-            onClick={switchToVoiceMode}
-            title="语音输入"
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="9" y="2" width="6" height="11" rx="3" />
-              <path d="M5 10v1a7 7 0 0 0 14 0v-1" />
-              <path d="M12 18v4" />
-              <path d="M8 22h8" />
-            </svg>
-          </button>
+          {isVoiceSupported && (
+            <button
+              type="button"
+              className="cs-mode-switch-btn"
+              onClick={switchToVoiceMode}
+              title="语音输入"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="9" y="2" width="6" height="11" rx="3" />
+                <path d="M5 10v1a7 7 0 0 0 14 0v-1" />
+                <path d="M12 18v4" />
+                <path d="M8 22h8" />
+              </svg>
+            </button>
+          )}
 
           <div className="cs-text-input-wrapper">
             <MessageInput

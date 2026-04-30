@@ -52,6 +52,8 @@ const UikitMain: React.FC<{
 }> = ({ userId, password, groupId, groupName, onBack }) => {
   const client = useClient();
   const { setCurrentConversation } = useConversationContext();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // const { setAppUserInfo } = useAddressContext();
   const [loginStatus, setLoginStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('loading');
   const hasLogined = useRef(false);
   const hasSetConversation = useRef(false);
@@ -65,6 +67,15 @@ const UikitMain: React.FC<{
       .then(() => {
         console.log('客服场景登录成功');
         setLoginStatus('success');
+
+        // 【示例】设置当前登录用户的昵称和头像（取消注释即可使用）
+        // setAppUserInfo({
+        //   [userId]: {
+        //     userId: userId,
+        //     nickname: '客服用户昵称',
+        //     avatarurl: 'https://example.com/avatar.png',
+        //   },
+        // });
       })
       .catch((err: unknown) => {
         console.error('客服场景登录失败', err);
