@@ -1,6 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../App.css';
+import { getDebugInfo } from '../utils';
+
+// uniApp webview 注入的全局对象声明
+declare global {
+  interface Window {
+    receiveUniAppMessage?: (msg: UniAppMessage) => void;
+  }
+}
+
+// uniApp 发送给 H5 的消息结构
+interface UniAppMessage {
+  type: string;
+  data?: unknown;
+}
 
 /**
  * 客服场景选择弹窗
@@ -54,6 +68,52 @@ const CustomerServicePopup: React.FC<{
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const [showCsPopup, setShowCsPopup] = useState(false);
+  const [toast, setToast] = useState<{ visible: boolean; text: string }>({
+    visible: false,
+    text: '',
+  });
+  const [envInfo, setEnvInfo] = useState<string>('检测中...');
+
+  // 显示 toast
+  const showToast = (text: string) => {
+    setToast({ visible: true, text });
+    setTimeout(() => {
+      setToast({ visible: false, text: '' });
+    }, 3000);
+  };
+
+  // 使用 uni.getEnv 检测当前运行环境
+  useEffect(() => {
+    const debug = getDebugInfo();
+    if (window.uni?.getEnv) {
+      window.uni.getEnv((res) => {
+        const env = res.uvue
+          ? 'uni-app x (uvue)'
+          : res.nvue
+            ? 'uni-app (nvue)'
+            : res.plus
+              ? 'uni-app (plus)'
+              : '标准 H5 浏览器';
+        setEnvInfo(`${env} | wx=${debug.hasWx} wxMP=${debug.hasWxMiniProgram} uni=${debug.hasUni}`);
+        console.log('[uni.getEnv] 当前环境:', res, debug);
+      });
+    } else {
+      Promise.resolve().then(() => setEnvInfo(`未加载uni SDK | wx=${debug.hasWx} wxMP=${debug.hasWxMiniProgram} uni=${debug.hasUni}`));
+    }
+  }, []);
+
+  // 接收 uniApp 消息的回调
+  useEffect(() => {
+    window.receiveUniAppMessage = (msg: UniAppMessage) => {
+      console.log('[H5] 收到 uniApp 消息:', msg);
+      const text = `[uniApp→H5] type: ${msg.type}`;
+      showToast(text);
+    };
+
+    return () => {
+      delete window.receiveUniAppMessage;
+    };
+  }, []);
 
   const handleOpenFullUikit = () => {
     navigate('/full-uikit');
@@ -77,10 +137,17 @@ const Home: React.FC = () => {
     navigate('/customer-service/voice-chat');
   };
 
+  const handleOpenUniBridge = () => {
+    navigate('/uni-bridge');
+  };
+
   return (
     <div className="h5-container">
       <header className="h5-header">
         <h1>环信UIKIT H5演示</h1>
+        <p style={{ fontSize: 12, color: '#888', marginTop: 4 }}>
+          运行环境: {envInfo}
+        </p>
       </header>
 
       <main className="h5-main">
@@ -112,6 +179,15 @@ const Home: React.FC = () => {
               <h3>🎧 客服场景演示</h3>
               <p>模拟客服接入流程，支持基础/语音两种模式</p>
             </div>
+
+            <div
+              className="feature-item link"
+              onClick={handleOpenUniBridge}
+              style={{ border: '2px dashed #007bff' }}
+            >
+              <h3>🌉 uni-app 跨平台通信</h3>
+              <p>环境检测、消息通信、支付跳转最佳实践演示</p>
+            </div>
           </div>
         </section>
       </main>
@@ -119,6 +195,28 @@ const Home: React.FC = () => {
       <footer className="h5-footer">
         <p>环信UIKIT H5演示 © 2026</p>
       </footer>
+
+      {/* uniApp 消息 toast */}
+      {toast.visible && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '20%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: 'rgba(0, 0, 0, 0.75)',
+            color: '#fff',
+            padding: '12px 24px',
+            borderRadius: '8px',
+            fontSize: '14px',
+            zIndex: 9999,
+            pointerEvents: 'none',
+            animation: 'fadeIn 0.2s ease',
+          }}
+        >
+          {toast.text}
+        </div>
+      )}
 
       <CustomerServicePopup
         visible={showCsPopup}

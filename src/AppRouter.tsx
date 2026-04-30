@@ -7,6 +7,7 @@ import CustomerServiceScenario from './pages/customerService/CustomerServiceScen
 import CustomerServiceChat from './pages/customerService/CustomerServiceChat';
 import CustomerServiceVoiceChat from './pages/customerService/CustomerServiceVoiceChat';
 import { ChatroomEntryPoint } from './components/chatroom/ChatroomComponents';
+import UniBridgeDemo from './pages/uniBridge/UniBridgeDemo';
 
 const AppRouter: React.FC = () => {
   return (
@@ -20,6 +21,7 @@ const AppRouter: React.FC = () => {
         <Route path="/customer-service" element={<CustomerServiceScenario />} />
         <Route path="/customer-service/chat" element={<CustomerServiceChat />} />
         <Route path="/customer-service/voice-chat" element={<CustomerServiceVoiceChat />} />
+        <Route path="/uni-bridge" element={<UniBridgeDemo />} />
       </Routes>
     </Router>
   );
